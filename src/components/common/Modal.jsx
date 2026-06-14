@@ -1,17 +1,27 @@
-export default function Modal({ id, title, openId, onClose, children }) {
+import { memo, useEffect } from 'react';
+
+const Modal = memo(function Modal({ isOpen, onClose, title, children, footer }) {
+  useEffect(() => {
+    if (!isOpen) return;
+    const handler = (e) => { if (e.key === 'Escape') onClose(); };
+    document.addEventListener('keydown', handler);
+    return () => document.removeEventListener('keydown', handler);
+  }, [isOpen, onClose]);
+
+  if (!isOpen) return null;
+
   return (
-    <div className={`db-modal-overlay${openId === id ? " open" : ""}`} onClick={(e) => e.target.className.includes("db-modal-overlay") && onClose()}>
-      <div className="db-modal">
-        <div className="db-modal-head">
-          <div className="db-modal-title">{title}</div>
-          <button className="db-modal-close" onClick={onClose}>
-            <svg width="15" height="15" viewBox="0 0 24 24" fill="none" stroke="currentColor" strokeWidth="2.5">
-              <line x1="18" y1="6" x2="6" y2="18"/><line x1="6" y1="6" x2="18" y2="18"/>
-            </svg>
-          </button>
+    <div className="modal-overlay" onClick={onClose}>
+      <div className="modal" onClick={(e) => e.stopPropagation()}>
+        <div className="modal-header">
+          <span className="modal-title">{title}</span>
+          <button className="modal-close" onClick={onClose} aria-label="Fermer">&#x2715;</button>
         </div>
-        {children}
+        <div className="modal-body">{children}</div>
+        {footer && <div className="modal-footer">{footer}</div>}
       </div>
     </div>
   );
-}
+});
+
+export default Modal;

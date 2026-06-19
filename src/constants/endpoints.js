@@ -64,4 +64,11 @@ export const ENDPOINTS = {
   SIGNALEMENTS: {
     LIST: '/signalements/',
   },
+
+  // ── Messages clients ──────────────────────────────────────────────────────
+  MESSAGES: {
+    STATS:    '/admin/messages/stats',
+    LIST:     '/admin/messages',
+    REPONDRE: (id) => `/admin/messages/${id}/repondre`,
+  },
 };

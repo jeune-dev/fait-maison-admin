@@ -10,4 +10,5 @@ export const ROUTES = {
   ADMINS:          '/admins',
   MENUS:           '/menus',
   CONFIG:          '/config',
+  MESSAGES:        '/messages',
 };

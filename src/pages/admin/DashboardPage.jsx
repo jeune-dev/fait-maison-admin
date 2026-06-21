@@ -6,9 +6,10 @@ import {
   getNombreProduitsActifs, getNombreClientsActifs,
   getNombreClientsInactifs, getVendeurs, getClients,
 } from '../../api/admin.api';
+import { getStatsEcommerce } from '../../api/commandes.api';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import Badge from '../../components/common/Badge';
-import { formatDate } from '../../utils/formatters';
+import { formatDate, formatMontant } from '../../utils/formatters';
 
 const StatCard = memo(function StatCard({ label, value, color, icon }) {
   return (
@@ -24,6 +25,7 @@ const StatCard = memo(function StatCard({ label, value, color, icon }) {
 
 export default function DashboardPage() {
   const [stats, setStats] = useState(null);
+  const [ecom, setEcom] = useState(null);
   const [vendeurs, setVendeurs] = useState([]);
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
@@ -47,6 +49,12 @@ export default function DashboardPage() {
         const cl = cList.data?.clients || cList.data || [];
         setVendeurs(Array.isArray(vl) ? vl.slice(0, 5) : []);
         setClients(Array.isArray(cl) ? cl.slice(0, 5) : []);
+
+        // KPIs e-commerce (non bloquant : si l'endpoint échoue, on n'affiche rien)
+        try {
+          const ecomRes = await getStatsEcommerce();
+          setEcom(ecomRes.data);
+        } catch { /* silencieux */ }
       } catch {
         toast.error('Erreur lors du chargement du tableau de bord');
       } finally {
@@ -81,6 +89,27 @@ export default function DashboardPage() {
           <StatCard label="Produits actifs" value={stats?.produitsActifs} color="red"
             icon={<><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></>} />
         </div>
+
+        {ecom && (
+          <>
+            <div className="page-header" style={{ marginTop: '0.5rem' }}>
+              <div className="page-header-left">
+                <h1 style={{ fontSize: '1.1rem' }}>E-commerce</h1>
+                <p>Indicateurs des ventes</p>
+              </div>
+            </div>
+            <div className="stats-grid">
+              <StatCard label="Chiffre d'affaires" value={formatMontant(ecom.chiffreAffaires)} color="green"
+                icon={<><line x1="12" y1="1" x2="12" y2="23"/><path d="M17 5H9.5a3.5 3.5 0 0 0 0 7h5a3.5 3.5 0 0 1 0 7H6"/></>} />
+              <StatCard label="Commandes" value={ecom.totalCommandes} color="blue"
+                icon={<><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/><path d="M16 10a4 4 0 0 1-8 0"/></>} />
+              <StatCard label="Commandes payées" value={ecom.commandesPayees} color="gold"
+                icon={<><path d="M22 11.08V12a10 10 0 1 1-5.93-9.14"/><polyline points="22 4 12 14.01 9 11.01"/></>} />
+              <StatCard label="Panier moyen" value={formatMontant(ecom.panierMoyen)} color="red"
+                icon={<><circle cx="9" cy="21" r="1"/><circle cx="20" cy="21" r="1"/><path d="M1 1h4l2.68 13.39a2 2 0 0 0 2 1.61h9.72a2 2 0 0 0 2-1.61L23 6H6"/></>} />
+            </div>
+          </>
+        )}
 
         <div className="dashboard-grid">
           <div className="card">

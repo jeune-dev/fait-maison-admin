@@ -15,6 +15,11 @@ const VendeursPage      = lazy(() => import('../pages/admin/VendeursPage'));
 const AcheteursPage     = lazy(() => import('../pages/admin/AcheteursPage'));
 const ProduitsPage      = lazy(() => import('../pages/admin/ProduitsPage'));
 const CategoriesPage    = lazy(() => import('../pages/admin/CategoriesPage'));
+const CommandesPage     = lazy(() => import('../pages/admin/CommandesPage'));
+const PaiementsPage     = lazy(() => import('../pages/admin/PaiementsPage'));
+const AbonnementsPage   = lazy(() => import('../pages/admin/AbonnementsPage'));
+const ModerationPage    = lazy(() => import('../pages/admin/ModerationPage'));
+const NotificationPage  = lazy(() => import('../pages/admin/NotificationPage'));
 const SignalementsPage  = lazy(() => import('../pages/admin/SignalementsPage'));
 const ConfigPage        = lazy(() => import('../pages/admin/ConfigPage'));
 const AdminsPage        = lazy(() => import('../pages/admin/AdminsPage'));
@@ -45,6 +50,11 @@ export default function AppRoutes() {
               <Route path={ROUTES.ACHETEURS}    element={<ErrorBoundary><AcheteursPage /></ErrorBoundary>} />
               <Route path={ROUTES.PRODUITS}     element={<ErrorBoundary><ProduitsPage /></ErrorBoundary>} />
               <Route path={ROUTES.CATEGORIES}   element={<ErrorBoundary><CategoriesPage /></ErrorBoundary>} />
+              <Route path={ROUTES.COMMANDES}    element={<ErrorBoundary><CommandesPage /></ErrorBoundary>} />
+              <Route path={ROUTES.PAIEMENTS}    element={<ErrorBoundary><PaiementsPage /></ErrorBoundary>} />
+              <Route path={ROUTES.ABONNEMENTS}  element={<ErrorBoundary><AbonnementsPage /></ErrorBoundary>} />
+              <Route path={ROUTES.MODERATION}   element={<ErrorBoundary><ModerationPage /></ErrorBoundary>} />
+              <Route path={ROUTES.NOTIFICATIONS} element={<ErrorBoundary><NotificationPage /></ErrorBoundary>} />
               <Route path={ROUTES.SIGNALEMENTS} element={<ErrorBoundary><SignalementsPage /></ErrorBoundary>} />
               <Route path={ROUTES.ADMINS}       element={<ErrorBoundary><AdminsPage /></ErrorBoundary>} />
               <Route path={ROUTES.MENUS}        element={<ErrorBoundary><MenusPage /></ErrorBoundary>} />

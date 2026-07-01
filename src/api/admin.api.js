@@ -26,3 +26,19 @@ export const activerUtilisateur   = (userId) => api.put(E.ACTIVER_UTILISATEUR(us
 // ── Configuration ─────────────────────────────────────────────────────────
 export const getPrixAbonnement    = ()      => api.get(E.PRIX_ABONNEMENT);
 export const updatePrixAbonnement = (prix)  => api.put(E.UPDATE_PRIX_ABONNEMENT, { prix });
+
+// ── Vérification vendeur ──────────────────────────────────────────────────
+export const verifierVendeur = (id) => api.put(E.VERIFIER_VENDEUR(id));
+
+// ── Modération produits ────────────────────────────────────────────────────
+export const getProduitsEnAttente = ()            => api.get(E.PRODUITS_EN_ATTENTE);
+export const approuverProduit     = (id)          => api.put(E.APPROUVER_PRODUIT(id));
+export const rejeterProduit       = (id, raison)  => api.put(E.REJETER_PRODUIT(id), { raison });
+export const supprimerProduit     = (id)          => api.delete(E.SUPPRIMER_PRODUIT(id));
+
+// ── Boutique ───────────────────────────────────────────────────────────────
+export const supprimerBoutique = (id) => api.delete(E.SUPPRIMER_BOUTIQUE(id));
+
+// ── Statistiques avancées ─────────────────────────────────────────────────
+export const getRevenusMensuels        = () => api.get(E.REVENUS_MENSUELS);
+export const getInscriptionsMensuelles = () => api.get(E.INSCRIPTIONS_MENSUELLES);

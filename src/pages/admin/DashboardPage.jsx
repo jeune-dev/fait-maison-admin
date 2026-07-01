@@ -5,10 +5,13 @@ import {
   getNombreVendeursActifs, getNombreVendeursInactifs,
   getNombreProduitsActifs, getNombreClientsActifs,
   getNombreClientsInactifs, getVendeurs, getClients,
+  getRevenusMensuels, getInscriptionsMensuelles,
 } from '../../api/admin.api';
+import { getStatsEcommerce } from '../../api/commandes.api';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import Badge from '../../components/common/Badge';
-import { formatDate } from '../../utils/formatters';
+import MiniBarChart from '../../components/common/MiniBarChart';
+import { formatDate, formatMontant } from '../../utils/formatters';
 
 const StatCard = memo(function StatCard({ label, value, color, icon }) {
   return (
@@ -27,6 +30,12 @@ export default function DashboardPage() {
   const [vendeurs, setVendeurs] = useState([]);
   const [clients, setClients] = useState([]);
   const [loading, setLoading] = useState(true);
+
+  // ── Extension : stats e-commerce + graphiques ──────────────────────────────
+  const [statsEcommerce, setStatsEcommerce] = useState(null);
+  const [revenusMensuels, setRevenusMensuels] = useState([]);
+  const [inscriptionsMensuelles, setInscriptionsMensuelles] = useState([]);
+  const [loadingExtra, setLoadingExtra] = useState(true);
 
   useEffect(() => {
     const load = async () => {
@@ -54,6 +63,26 @@ export default function DashboardPage() {
       }
     };
     load();
+  }, []);
+
+  useEffect(() => {
+    const loadExtra = async () => {
+      try {
+        const [se, rm, im] = await Promise.all([
+          getStatsEcommerce(), getRevenusMensuels(), getInscriptionsMensuelles(),
+        ]);
+        setStatsEcommerce(se.data?.stats || se.data || null);
+        const rmList = rm.data?.revenus || rm.data?.data || rm.data || [];
+        const imList = im.data?.inscriptions || im.data?.data || im.data || [];
+        setRevenusMensuels(Array.isArray(rmList) ? rmList : []);
+        setInscriptionsMensuelles(Array.isArray(imList) ? imList : []);
+      } catch {
+        toast.error('Erreur lors du chargement des statistiques avancées');
+      } finally {
+        setLoadingExtra(false);
+      }
+    };
+    loadExtra();
   }, []);
 
   if (loading) return <LoadingSpinner />;
@@ -124,6 +153,35 @@ export default function DashboardPage() {
             </div>
           </div>
         </div>
+
+        {/* ── Extension : statistiques e-commerce avancées ──────────────────── */}
+        {!loadingExtra && statsEcommerce && (
+          <div className="stats-grid">
+            <StatCard label="Commandes totales" value={statsEcommerce.commandes_total} color="blue"
+              icon={<><path d="M6 2 3 6v14a2 2 0 0 0 2 2h14a2 2 0 0 0 2-2V6l-3-4z"/><line x1="3" y1="6" x2="21" y2="6"/></>} />
+            <StatCard label="Montant total" value={formatMontant(statsEcommerce.montant_total)} color="green"
+              icon={<><circle cx="12" cy="12" r="10"/><path d="M12 6v12M15 9.5c0-1.4-1.3-2.5-3-2.5s-3 1.1-3 2.5 1.3 2.5 3 2.5 3 1.1 3 2.5-1.3 2.5-3 2.5-3-1.1-3-2.5"/></>} />
+            <StatCard label="Commandes livrées" value={statsEcommerce.commandes_livrees} color="gold"
+              icon={<><path d="M20 6 9 17l-5-5"/></>} />
+          </div>
+        )}
+
+        {!loadingExtra && (revenusMensuels.length > 0 || inscriptionsMensuelles.length > 0) && (
+          <div className="dashboard-grid">
+            <div className="card">
+              <div className="card-header"><span className="card-title">Revenus mensuels</span></div>
+              <div className="card-body">
+                <MiniBarChart data={revenusMensuels} labelKey="mois" valueKey="revenu" formatValue={formatMontant} />
+              </div>
+            </div>
+            <div className="card">
+              <div className="card-header"><span className="card-title">Inscriptions mensuelles</span></div>
+              <div className="card-body">
+                <MiniBarChart data={inscriptionsMensuelles} labelKey="mois" valueKey="nombre" />
+              </div>
+            </div>
+          </div>
+        )}
       </div>
     </>
   );

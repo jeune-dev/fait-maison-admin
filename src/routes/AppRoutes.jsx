@@ -19,6 +19,12 @@ const SignalementsPage  = lazy(() => import('../pages/admin/SignalementsPage'));
 const ConfigPage        = lazy(() => import('../pages/admin/ConfigPage'));
 const AdminsPage        = lazy(() => import('../pages/admin/AdminsPage'));
 const MenusPage         = lazy(() => import('../pages/admin/MenusPage'));
+const CommandesPage     = lazy(() => import('../pages/admin/CommandesPage'));
+const AbonnementsPage   = lazy(() => import('../pages/admin/AbonnementsPage'));
+const PaiementsPage     = lazy(() => import('../pages/admin/PaiementsPage'));
+const RetoursPage       = lazy(() => import('../pages/admin/RetoursPage'));
+const AuditLogsPage     = lazy(() => import('../pages/admin/AuditLogsPage'));
+const NotificationGlobalePage = lazy(() => import('../pages/admin/NotificationGlobalePage'));
 
 export default function AppRoutes() {
   return (
@@ -49,6 +55,12 @@ export default function AppRoutes() {
               <Route path={ROUTES.ADMINS}       element={<ErrorBoundary><AdminsPage /></ErrorBoundary>} />
               <Route path={ROUTES.MENUS}        element={<ErrorBoundary><MenusPage /></ErrorBoundary>} />
               <Route path={ROUTES.CONFIG}       element={<ErrorBoundary><ConfigPage /></ErrorBoundary>} />
+              <Route path={ROUTES.COMMANDES}    element={<ErrorBoundary><CommandesPage /></ErrorBoundary>} />
+              <Route path={ROUTES.ABONNEMENTS}  element={<ErrorBoundary><AbonnementsPage /></ErrorBoundary>} />
+              <Route path={ROUTES.PAIEMENTS}    element={<ErrorBoundary><PaiementsPage /></ErrorBoundary>} />
+              <Route path={ROUTES.RETOURS}      element={<ErrorBoundary><RetoursPage /></ErrorBoundary>} />
+              <Route path={ROUTES.AUDIT_LOGS}   element={<ErrorBoundary><AuditLogsPage /></ErrorBoundary>} />
+              <Route path={ROUTES.NOTIFICATION_GLOBALE} element={<ErrorBoundary><NotificationGlobalePage /></ErrorBoundary>} />
             </Route>
           </Route>
 

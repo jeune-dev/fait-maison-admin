@@ -11,4 +11,10 @@ export const ROUTES = {
   MENUS:           '/menus',
   CONFIG:          '/config',
   MESSAGES:        '/messages',
+  COMMANDES:       '/commandes',
+  ABONNEMENTS:     '/abonnements',
+  PAIEMENTS:       '/paiements',
+  RETOURS:         '/retours',
+  AUDIT_LOGS:      '/audit-logs',
+  NOTIFICATION_GLOBALE: '/notification-globale',
 };

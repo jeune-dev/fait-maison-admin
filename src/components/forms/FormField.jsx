@@ -2,7 +2,7 @@ import { memo } from 'react';
 
 const FormField = memo(function FormField({
   label, name, type = 'text', value, onChange, error, required = false,
-  placeholder, as: As = 'input',
+  placeholder, as: As = 'input', disabled = false,
 }) {
   return (
     <div className="form-field">
@@ -20,6 +20,7 @@ const FormField = memo(function FormField({
           onChange={onChange}
           placeholder={placeholder}
           required={required}
+          disabled={disabled}
         />
       ) : (
         <input
@@ -31,6 +32,7 @@ const FormField = memo(function FormField({
           onChange={onChange}
           placeholder={placeholder}
           required={required}
+          disabled={disabled}
         />
       )}
       {error && <p className="form-error">{error}</p>}

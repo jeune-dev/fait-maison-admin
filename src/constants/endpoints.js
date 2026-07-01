@@ -42,14 +42,71 @@ export const ENDPOINTS = {
     // Actions sur vendeurs
     ABONNEMENT_MANUEL:   (vendeurId) => `/admin/abonnement-manuel/${vendeurId}`,
     SUSPENDRE_VENDEUR:   (vendeurId) => `/admin/suspendre-vendeur/${vendeurId}`,
+    VERIFIER_VENDEUR:    (vendeurId) => `/admin/vendeur/${vendeurId}/verifier`,
 
     // Actions sur utilisateurs
     SUPPRIMER_UTILISATEUR: (userId) => `/admin/supprimer-utilisateur/${userId}`,
     ACTIVER_UTILISATEUR:   (userId) => `/admin/activer-utilisateur/${userId}`,
 
+    // Modération produits
+    PRODUITS_EN_ATTENTE: '/admin/produits-en-attente',
+    APPROUVER_PRODUIT:   (id) => `/admin/produit/${id}/approuver`,
+    REJETER_PRODUIT:     (id) => `/admin/produit/${id}/rejeter`,
+    SUPPRIMER_PRODUIT:   (id) => `/admin/produit/${id}`,
+
+    // Boutique
+    SUPPRIMER_BOUTIQUE: (id) => `/admin/boutique/${id}`,
+
+    // Statistiques avancées
+    REVENUS_MENSUELS:        '/admin/revenus-mensuels',
+    INSCRIPTIONS_MENSUELLES: '/admin/inscriptions-mensuelles',
+
     // Configuration
     PRIX_ABONNEMENT:        '/prix-abonnement',
     UPDATE_PRIX_ABONNEMENT: '/admin/prix-abonnement',
+  },
+
+  // ── Commandes ─────────────────────────────────────────────────────────────
+  COMMANDES: {
+    LIST:            '/admin/commandes',
+    STATS_ECOMMERCE: '/admin/stats-ecommerce',
+  },
+
+  // ── Abonnements ───────────────────────────────────────────────────────────
+  ABONNEMENTS: {
+    LIST:         '/admin/abonnements',
+    CREER_MANUEL: (vendeurId) => `/admin/abonnement-manuel/${vendeurId}`,
+    REVOQUER:     (id) => `/admin/abonnement/${id}/revoquer`,
+    EXPIRATION:   '/admin/abonnements-expiration',
+  },
+
+  // ── Paiements ─────────────────────────────────────────────────────────────
+  PAIEMENTS: {
+    LIST:   '/admin/paiements',
+    ECHECS: '/admin/paiements/echecs',
+  },
+
+  // ── Demandes de retour ────────────────────────────────────────────────────
+  RETOURS: {
+    LIST:    '/admin/demandes-retour',
+    TRAITER: (id) => `/admin/demandes-retour/${id}/traiter`,
+  },
+
+  // ── Logs d'audit ──────────────────────────────────────────────────────────
+  AUDIT_LOGS: {
+    LIST: '/admin/audit-logs',
+  },
+
+  // ── Configuration générale ────────────────────────────────────────────────
+  CONFIGS: {
+    LIST:   '/admin/configs',
+    CREATE: '/admin/configs',
+    UPDATE: (cle) => `/admin/configs/${cle}`,
+  },
+
+  // ── Notification globale ─────────────────────────────────────────────────
+  NOTIFICATION_GLOBALE: {
+    ENVOYER: '/admin/notification-globale',
   },
 
   // ── Catégories ────────────────────────────────────────────────────────────

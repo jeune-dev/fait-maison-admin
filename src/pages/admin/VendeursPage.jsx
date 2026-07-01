@@ -7,6 +7,7 @@ import {
   suspendreVendeur,
   supprimerUtilisateur,
   activerUtilisateur,
+  verifierVendeur,
 } from '../../api/admin.api';
 import LoadingSpinner from '../../components/common/LoadingSpinner';
 import Badge from '../../components/common/Badge';
@@ -114,6 +115,16 @@ export default function VendeursPage() {
     }
   };
 
+  const handleVerifier = async (vendeur) => {
+    try {
+      await verifierVendeur(vendeur.id);
+      toast.success(`Vendeur ${vendeur.prenom} ${vendeur.nom} vérifié`);
+      await load();
+    } catch {
+      toast.error('Erreur lors de la vérification du vendeur');
+    }
+  };
+
   const executeAction = async () => {
     const { action, vendeur } = confirmState;
     if (action === 'suspendre') await handleSuspendre(vendeur);
@@ -178,6 +189,7 @@ export default function VendeursPage() {
                         : <div className="avatar-placeholder">{(v.prenom?.[0] || '')}{(v.nom?.[0] || '')}</div>
                       }
                       <span className="td-bold">{v.prenom} {v.nom}</span>
+                      {v.verifie && <Badge variant="info">Vérifié</Badge>}
                     </div>
                   </td>
                   <td className="td-muted">{v.email || '—'}</td>
@@ -202,6 +214,11 @@ export default function VendeursPage() {
                       <button className="btn btn-ghost btn-sm" onClick={() => handleAbonnement(v)}>
                         Abonnement
                       </button>
+                      {!v.verifie && (
+                        <button className="btn btn-ghost btn-sm" onClick={() => handleVerifier(v)}>
+                          Vérifier
+                        </button>
+                      )}
                       {v.suspendu || !v.actif ? (
                         <button className="btn btn-success btn-sm" onClick={() => openConfirm('activer', v)}>
                           Réactiver
@@ -246,6 +263,7 @@ export default function VendeursPage() {
               <div className="detail-item"><label>Ville</label><span>{selected.ville || '—'}</span></div>
               <div className="detail-item"><label>Statut</label><span>{statusLabel(selected.actif, selected.suspendu)}</span></div>
               <div className="detail-item"><label>Abonnement</label><span>{selected.abonnementActif ? 'Actif' : 'Inactif'}</span></div>
+              <div className="detail-item"><label>Vérification</label><span>{selected.verifie ? 'Vérifié' : 'Non vérifié'}</span></div>
               <div className="detail-item"><label>Inscription</label><span>{formatDate(selected.createdAt)}</span></div>
               <div className="detail-item"><label>Boutique</label><span>{selected.boutiques?.nom || '—'}</span></div>
               {selected.adresse && <div className="detail-item full"><label>Adresse</label><span>{selected.adresse}</span></div>}

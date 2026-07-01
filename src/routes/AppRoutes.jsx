@@ -15,13 +15,14 @@ const VendeursPage      = lazy(() => import('../pages/admin/VendeursPage'));
 const AcheteursPage     = lazy(() => import('../pages/admin/AcheteursPage'));
 const ProduitsPage      = lazy(() => import('../pages/admin/ProduitsPage'));
 const CategoriesPage    = lazy(() => import('../pages/admin/CategoriesPage'));
+const CommandesPage     = lazy(() => import('../pages/admin/CommandesPage'));
+const PaiementsPage     = lazy(() => import('../pages/admin/PaiementsPage'));
+const AbonnementsPage   = lazy(() => import('../pages/admin/AbonnementsPage'));
+const ModerationPage    = lazy(() => import('../pages/admin/ModerationPage'));
 const SignalementsPage  = lazy(() => import('../pages/admin/SignalementsPage'));
 const ConfigPage        = lazy(() => import('../pages/admin/ConfigPage'));
 const AdminsPage        = lazy(() => import('../pages/admin/AdminsPage'));
 const MenusPage         = lazy(() => import('../pages/admin/MenusPage'));
-const CommandesPage     = lazy(() => import('../pages/admin/CommandesPage'));
-const AbonnementsPage   = lazy(() => import('../pages/admin/AbonnementsPage'));
-const PaiementsPage     = lazy(() => import('../pages/admin/PaiementsPage'));
 const RetoursPage       = lazy(() => import('../pages/admin/RetoursPage'));
 const AuditLogsPage     = lazy(() => import('../pages/admin/AuditLogsPage'));
 const NotificationGlobalePage = lazy(() => import('../pages/admin/NotificationGlobalePage'));
@@ -51,13 +52,14 @@ export default function AppRoutes() {
               <Route path={ROUTES.ACHETEURS}    element={<ErrorBoundary><AcheteursPage /></ErrorBoundary>} />
               <Route path={ROUTES.PRODUITS}     element={<ErrorBoundary><ProduitsPage /></ErrorBoundary>} />
               <Route path={ROUTES.CATEGORIES}   element={<ErrorBoundary><CategoriesPage /></ErrorBoundary>} />
+              <Route path={ROUTES.COMMANDES}    element={<ErrorBoundary><CommandesPage /></ErrorBoundary>} />
+              <Route path={ROUTES.PAIEMENTS}    element={<ErrorBoundary><PaiementsPage /></ErrorBoundary>} />
+              <Route path={ROUTES.ABONNEMENTS}  element={<ErrorBoundary><AbonnementsPage /></ErrorBoundary>} />
+              <Route path={ROUTES.MODERATION}   element={<ErrorBoundary><ModerationPage /></ErrorBoundary>} />
               <Route path={ROUTES.SIGNALEMENTS} element={<ErrorBoundary><SignalementsPage /></ErrorBoundary>} />
               <Route path={ROUTES.ADMINS}       element={<ErrorBoundary><AdminsPage /></ErrorBoundary>} />
               <Route path={ROUTES.MENUS}        element={<ErrorBoundary><MenusPage /></ErrorBoundary>} />
               <Route path={ROUTES.CONFIG}       element={<ErrorBoundary><ConfigPage /></ErrorBoundary>} />
-              <Route path={ROUTES.COMMANDES}    element={<ErrorBoundary><CommandesPage /></ErrorBoundary>} />
-              <Route path={ROUTES.ABONNEMENTS}  element={<ErrorBoundary><AbonnementsPage /></ErrorBoundary>} />
-              <Route path={ROUTES.PAIEMENTS}    element={<ErrorBoundary><PaiementsPage /></ErrorBoundary>} />
               <Route path={ROUTES.RETOURS}      element={<ErrorBoundary><RetoursPage /></ErrorBoundary>} />
               <Route path={ROUTES.AUDIT_LOGS}   element={<ErrorBoundary><AuditLogsPage /></ErrorBoundary>} />
               <Route path={ROUTES.NOTIFICATION_GLOBALE} element={<ErrorBoundary><NotificationGlobalePage /></ErrorBoundary>} />

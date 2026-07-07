@@ -1,4 +1,5 @@
 import { useEffect, useState, useCallback } from 'react';
+import { createPortal } from 'react-dom';
 import { toast } from 'react-toastify';
 import { Helmet } from 'react-helmet';
 import {
@@ -20,15 +21,16 @@ import useDebounce from '../../hooks/useDebounce';
 
 const PAGE_SIZE = 10;
 
-function statusBadge(actif, suspendu) {
-  if (suspendu) return 'danger';
-  if (actif) return 'success';
+// Le backend renvoie `statut` ('actif' | 'inactif' | 'suspendu').
+function statutBadge(statut) {
+  if (statut === 'suspendu') return 'danger';
+  if (statut === 'actif') return 'success';
   return 'default';
 }
 
-function statusLabel(actif, suspendu) {
-  if (suspendu) return 'Suspendu';
-  if (actif) return 'Actif';
+function statutLabel(statut) {
+  if (statut === 'suspendu') return 'Suspendu';
+  if (statut === 'actif') return 'Actif';
   return 'Inactif';
 }
 
@@ -40,6 +42,8 @@ export default function VendeursPage() {
   const [selected, setSelected] = useState(null);
   const [detailOpen, setDetailOpen] = useState(false);
   const [confirmState, setConfirmState] = useState({ open: false, action: null, vendeur: null });
+  const [openDropdownId, setOpenDropdownId] = useState(null);
+  const [dropdownCoords, setDropdownCoords] = useState({ top: 0, left: 0 });
 
   const debouncedSearch = useDebounce(search, 300);
 
@@ -153,9 +157,7 @@ export default function VendeursPage() {
       <div className="card">
         <div className="card-header">
           <span className="card-title">Liste des vendeurs</span>
-          <div className="toolbar-left">
-            <SearchInput value={search} onChange={handleSearch} placeholder="Rechercher par nom ou email..." />
-          </div>
+          <SearchInput value={search} onChange={handleSearch} placeholder="Rechercher par nom ou email..." />
         </div>
         <div className="table-wrap">
           <table className="data-table">
@@ -194,43 +196,108 @@ export default function VendeursPage() {
                   </td>
                   <td className="td-muted">{v.email || '—'}</td>
                   <td className="td-muted">{v.telephone || '—'}</td>
-                  <td className="td-muted">{v.ville || '—'}</td>
+                  <td className="td-muted">{v.ville || v.boutiques?.localisation || v.adresse || '—'}</td>
                   <td>
                     <Badge variant={v.abonnementActif ? 'success' : 'default'}>
                       {v.abonnementActif ? 'Actif' : 'Inactif'}
                     </Badge>
                   </td>
                   <td>
-                    <Badge variant={statusBadge(v.actif, v.suspendu)}>
-                      {statusLabel(v.actif, v.suspendu)}
+                    <Badge variant={statutBadge(v.statut)}>
+                      {statutLabel(v.statut)}
                     </Badge>
                   </td>
                   <td className="td-muted">{formatDate(v.createdAt)}</td>
                   <td>
-                    <div className="table-actions">
-                      <button className="btn btn-ghost btn-sm" onClick={() => { setSelected(v); setDetailOpen(true); }}>
-                        Voir
+                    <div className="dropdown-actions-container">
+                      <button
+                        className="btn btn-ghost btn-sm"
+                        onClick={(e) => {
+                          const rect = e.currentTarget.getBoundingClientRect();
+                          setDropdownCoords({
+                            top: rect.bottom + window.scrollY,
+                            left: rect.right + window.scrollX - 140,
+                          });
+                          setOpenDropdownId(openDropdownId === v.id ? null : v.id);
+                        }}
+                      >
+                        Actions ▾
                       </button>
-                      <button className="btn btn-ghost btn-sm" onClick={() => handleAbonnement(v)}>
-                        Abonnement
-                      </button>
-                      {!v.verifie && (
-                        <button className="btn btn-ghost btn-sm" onClick={() => handleVerifier(v)}>
-                          Vérifier
-                        </button>
+                      {openDropdownId === v.id && createPortal(
+                        <>
+                          <div className="dropdown-backdrop" onClick={() => setOpenDropdownId(null)} />
+                          <div
+                            className="dropdown-menu-actions"
+                            style={{
+                              position: 'absolute',
+                              top: dropdownCoords.top + 4,
+                              left: dropdownCoords.left,
+                            }}
+                          >
+                            <button
+                              className="dropdown-item"
+                              onClick={() => {
+                                setSelected(v);
+                                setDetailOpen(true);
+                                setOpenDropdownId(null);
+                              }}
+                            >
+                              Voir
+                            </button>
+                            <button
+                              className="dropdown-item"
+                              onClick={() => {
+                                handleAbonnement(v);
+                                setOpenDropdownId(null);
+                              }}
+                            >
+                              Abonnement
+                            </button>
+                            {!v.verifie && (
+                              <button
+                                className="dropdown-item"
+                                onClick={() => {
+                                  handleVerifier(v);
+                                  setOpenDropdownId(null);
+                                }}
+                              >
+                                Vérifier
+                              </button>
+                            )}
+                            {v.statut !== 'actif' ? (
+                              <button
+                                className="dropdown-item success"
+                                onClick={() => {
+                                  openConfirm('activer', v);
+                                  setOpenDropdownId(null);
+                                }}
+                              >
+                                Réactiver
+                              </button>
+                            ) : (
+                              <button
+                                className="dropdown-item warning"
+                                onClick={() => {
+                                  openConfirm('suspendre', v);
+                                  setOpenDropdownId(null);
+                                }}
+                              >
+                                Suspendre
+                              </button>
+                            )}
+                            <button
+                              className="dropdown-item danger"
+                              onClick={() => {
+                                openConfirm('supprimer', v);
+                                setOpenDropdownId(null);
+                              }}
+                            >
+                              Supprimer
+                            </button>
+                          </div>
+                        </>,
+                        document.body
                       )}
-                      {v.suspendu || !v.actif ? (
-                        <button className="btn btn-success btn-sm" onClick={() => openConfirm('activer', v)}>
-                          Réactiver
-                        </button>
-                      ) : (
-                        <button className="btn btn-warning btn-sm" onClick={() => openConfirm('suspendre', v)}>
-                          Suspendre
-                        </button>
-                      )}
-                      <button className="btn btn-danger btn-sm" onClick={() => openConfirm('supprimer', v)}>
-                        Supprimer
-                      </button>
                     </div>
                   </td>
                 </tr>
@@ -260,8 +327,8 @@ export default function VendeursPage() {
             </div>
             <div className="detail-grid">
               <div className="detail-item"><label>Téléphone</label><span>{selected.telephone || '—'}</span></div>
-              <div className="detail-item"><label>Ville</label><span>{selected.ville || '—'}</span></div>
-              <div className="detail-item"><label>Statut</label><span>{statusLabel(selected.actif, selected.suspendu)}</span></div>
+              <div className="detail-item"><label>Ville</label><span>{selected.ville || selected.boutiques?.localisation || selected.adresse || '—'}</span></div>
+              <div className="detail-item"><label>Statut</label><span>{statutLabel(selected.statut)}</span></div>
               <div className="detail-item"><label>Abonnement</label><span>{selected.abonnementActif ? 'Actif' : 'Inactif'}</span></div>
               <div className="detail-item"><label>Vérification</label><span>{selected.verifie ? 'Vérifié' : 'Non vérifié'}</span></div>
               <div className="detail-item"><label>Inscription</label><span>{formatDate(selected.createdAt)}</span></div>

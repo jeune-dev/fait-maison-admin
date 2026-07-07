@@ -9,7 +9,6 @@ export default function ProtectedRoute() {
   if (isLoading) return <LoadingSpinner fullPage />;
   if (!user) return <Navigate to={ROUTES.LOGIN} replace />;
   if (user.role !== 'Admin' && user.role !== 'SuperAdmin') return <Navigate to={ROUTES.LOGIN} replace />;
-  if (user.isFirstLogin) return <Navigate to={ROUTES.CHANGE_PASSWORD} replace />;
 
   return <Outlet />;
 }

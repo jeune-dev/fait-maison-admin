@@ -29,13 +29,16 @@ export default function Sidebar({ isOpen, setIsOpen, mobileOpen, setMobileOpen }
   const { menus } = usePermissions();
   const initials = user ? `${(user.nom || '')[0] || ''}${(user.prenom || '')[0] || ''}`.toUpperCase() : 'A';
 
-  const navItems = menus.map((menu) => ({
-    to: menu.path,
-    label: menu.name,
-    code: menu.code,
-    icon: ICON_MAP[menu.code] || DEFAULT_ICON,
-    end: menu.path === '/',
-  }));
+  // La page "Notifications" est retirée du dashboard.
+  const navItems = menus
+    .filter((menu) => menu.code !== 'NOTIFICATIONS')
+    .map((menu) => ({
+      to: menu.path,
+      label: menu.name,
+      code: menu.code,
+      icon: ICON_MAP[menu.code] || DEFAULT_ICON,
+      end: menu.path === '/',
+    }));
 
   return (
     <aside className={`sidebar${isOpen ? '' : ' closed'}${mobileOpen ? ' mobile-open' : ''}`}>

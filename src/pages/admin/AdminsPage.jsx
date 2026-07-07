@@ -202,7 +202,6 @@ export default function AdminsPage() {
                 <tr>
                   <th>Administrateur</th>
                   <th>Email</th>
-                  <th>Première connexion</th>
                   <th>Inscrit le</th>
                   <th>Actions</th>
                 </tr>
@@ -210,7 +209,7 @@ export default function AdminsPage() {
               <tbody>
                 {paginated.length === 0 ? (
                   <tr>
-                    <td colSpan={5}>
+                    <td colSpan={4}>
                       <div className="empty-state">
                         <p>{debouncedSearch ? `Aucun résultat pour "${debouncedSearch}"` : 'Aucun administrateur enregistré'}</p>
                       </div>
@@ -225,11 +224,6 @@ export default function AdminsPage() {
                       </div>
                     </td>
                     <td className="td-muted">{a.email}</td>
-                    <td>
-                      <Badge variant={a.isFirstLogin ? 'warning' : 'success'}>
-                        {a.isFirstLogin ? 'Non connecté' : 'Connecté'}
-                      </Badge>
-                    </td>
                     <td className="td-muted">{formatDate(a.createdAt)}</td>
                     <td>
                       <div className="table-actions">

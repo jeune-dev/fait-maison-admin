@@ -2,7 +2,6 @@ import { Routes, Route, Navigate } from 'react-router-dom';
 import { lazy, Suspense } from 'react';
 import ProtectedRoute from './ProtectedRoute';
 import GuestRoute from './GuestRoute';
-import FirstLoginRoute from './FirstLoginRoute';
 import AdminLayout from '../components/layouts/AdminLayout';
 import LoadingSpinner from '../components/common/LoadingSpinner';
 import ErrorBoundary from '../components/common/ErrorBoundary';
@@ -39,13 +38,10 @@ export default function AppRoutes() {
           </Route>
 
           {/* Route changement mdp — accessible si connecté même avec isFirstLogin=true */}
-          <Route element={<FirstLoginRoute />}>
+          <Route element={<ProtectedRoute />}>
             <Route path={ROUTES.CHANGE_PASSWORD} element={
               <ErrorBoundary><ChangePasswordPage /></ErrorBoundary>
             } />
-          </Route>
-
-          <Route element={<ProtectedRoute />}>
             <Route element={<AdminLayout />}>
               <Route path={ROUTES.DASHBOARD}    element={<ErrorBoundary><DashboardPage /></ErrorBoundary>} />
               <Route path={ROUTES.VENDEURS}     element={<ErrorBoundary><VendeursPage /></ErrorBoundary>} />

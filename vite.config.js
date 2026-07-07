@@ -3,6 +3,14 @@ import react from '@vitejs/plugin-react'
 
 export default defineConfig({
   plugins: [react()],
+  // Protection anti-clickjacking via en-têtes HTTP (là où le navigateur les
+  // respecte, contrairement aux balises <meta>).
+  server: {
+    headers: {
+      'X-Frame-Options': 'DENY',
+      'Content-Security-Policy': "frame-ancestors 'none'",
+    },
+  },
   build: {
     rollupOptions: {
       output: {

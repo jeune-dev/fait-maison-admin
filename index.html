@@ -5,9 +5,11 @@
     <link rel="icon" type="image/png" href="/logo.png" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0" />
     <meta name="robots" content="noindex, nofollow" />
+    <!-- Note : frame-ancestors et X-Frame-Options sont ignorés via <meta> par le
+         navigateur. Ils doivent être envoyés en en-têtes HTTP par l'hébergeur
+         (voir vite.config pour le dev). On les retire ici pour éviter les warnings. -->
     <meta http-equiv="Content-Security-Policy"
-      content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https: blob:; connect-src 'self' http://localhost:5000 https:; frame-ancestors 'none';" />
-    <meta http-equiv="X-Frame-Options" content="DENY" />
+      content="default-src 'self'; script-src 'self' 'unsafe-inline'; style-src 'self' 'unsafe-inline'; font-src 'self'; img-src 'self' data: https: blob:; connect-src 'self' http://localhost:3000 http://localhost:5000 https:;" />
     <meta http-equiv="X-Content-Type-Options" content="nosniff" />
     <title>Fait Maison — Administration</title>
   </head>
